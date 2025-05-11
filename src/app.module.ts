@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from 'src/database/config/database-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AllConfigType } from 'src/config/config.type';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -44,6 +45,9 @@ import { AllConfigType } from 'src/config/config.type';
         };
       },
     }),
+    MongooseModule.forRoot(
+      'mongodb://mongo:mongo@localhost:27017/nest_api?authSource=admin',
+    ),
   ],
   controllers: [AppController],
   providers: [AppService],
