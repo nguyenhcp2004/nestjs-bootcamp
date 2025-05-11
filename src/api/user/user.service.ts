@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { CreateUserReqDto } from './dto/create-user.req.dto';
+import { Repository } from 'typeorm';
+import { UserEntity } from '@/api/user/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserResDto } from '@/api/user/dto/user.res.dto';
+import { SYSTEM_USER_ID } from 'src/constants/app.constant';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private readonly logger = new Logger(UserService.name);
+
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
+
+  async create(dto: CreateUserReqDto): Promise<UserResDto> {
+    const { username, email, password, bio, image } = dto;
+
+    // check uniqueness of username/email
+    const user = await this.userRepository.findOne({
+      where: [
+        {
+          username,
+        },
+        {
+          email,
+        },
+      ],
+    });
+
+    if (user) {
+      throw new BadRequestException('User already exists');
+    }
+
+    const newUser = new UserEntity({
+      username,
+      email,
+      password,
+      bio,
+      image,
+      createdBy: SYSTEM_USER_ID,
+      updatedBy: SYSTEM_USER_ID,
+    });
+
+    const savedUser = await this.userRepository.save(newUser);
+    this.logger.debug(savedUser);
+
+    return plainToInstance(UserResDto, savedUser);
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  async findOne(id: string): Promise<UserResDto> {
+    const user = await this.userRepository.findOneByOrFail({ id });
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return user.toDto(UserResDto);
   }
 }
