@@ -1,0 +1,11 @@
+export interface DatabaseConfig {
+  type: string;
+  host: string;
+  port: number;
+  password: string;
+  name: string;
+  username: string;
+  logging: boolean;
+  synchronize: boolean;
+  maxConnections: number;
+}
