@@ -5,6 +5,7 @@ import { AuthModule } from './api/auth/auth.module';
 import { UserModule } from './api/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from 'src/database/config/database-config';
+import mongoConfig from 'src/database/config/mongooes-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AllConfigType } from 'src/config/config.type';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -16,7 +17,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true,
-      load: [databaseConfig],
+      load: [databaseConfig, mongoConfig],
       cache: true,
       expandVariables: true,
     }),
@@ -45,9 +46,24 @@ import { MongooseModule } from '@nestjs/mongoose';
         };
       },
     }),
-    MongooseModule.forRoot(
-      'mongodb://mongo:mongo@localhost:27017/nest_api?authSource=admin',
-    ),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<AllConfigType>) => {
+        return {
+          uri: `mongodb://${configService.getOrThrow('mongo.username', {
+            infer: true,
+          })}:${configService.getOrThrow('mongo.password', {
+            infer: true,
+          })}@${configService.getOrThrow('mongo.host', {
+            infer: true,
+          })}:${configService.getOrThrow('mongo.port', {
+            infer: true,
+          })}/${configService.getOrThrow('mongo.database', {
+            infer: true,
+          })}?authSource=admin`,
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
