@@ -13,6 +13,7 @@ import { TypeOrmConfigService } from 'src/database/typeorm-config.service'
 import { DataSource, DataSourceOptions } from 'typeorm'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor'
+import authConfig from '@/api/auth/config/auth-config'
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { LoggingInterceptor } from 'src/interceptors/logging.interceptor'
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true,
-      load: [databaseConfig, mongoConfig],
+      load: [databaseConfig, mongoConfig, authConfig],
       cache: true,
       expandVariables: true
     }),

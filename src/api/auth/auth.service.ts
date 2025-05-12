@@ -7,6 +7,7 @@ import { UserResDto } from '../user/dto/user.res.dto'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { LoginRequestDto } from '@/api/auth/dto/login.req.dto'
+import { AllConfigType } from 'src/config/config.type'
 type PayLoadAuth = {
   id: string
   role: string
@@ -17,7 +18,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService<AllConfigType>
   ) {}
 
   private async generateTokens(accountId: string, role: string) {
@@ -25,15 +26,15 @@ export class AuthService {
       this.jwtService.signAsync(
         { id: accountId, role },
         {
-          secret: this.configService.get<string>('ACCESS_SECRET'),
-          expiresIn: this.configService.get<string>('ACCESS_EXPIRES_IN')
+          secret: this.configService.get('auth.accessExpires', { infer: true }),
+          expiresIn: this.configService.get('auth.accessExpires', { infer: true })
         }
       ),
       this.jwtService.signAsync(
         { id: accountId },
         {
-          secret: this.configService.get<string>('REFRESH_SECRET'),
-          expiresIn: this.configService.get<string>('REFRESH_EXPIRES_IN')
+          secret: this.configService.get('auth.refreshSecret', { infer: true }),
+          expiresIn: this.configService.get('auth.refreshExpires', { infer: true })
         }
       )
     ])

@@ -10,7 +10,7 @@ class EnvironmentVariablesValidator {
 
   @IsString()
   @IsNotEmpty()
-  AUTH_ACCESS_EXPIRES_IN: string
+  AUTH_ACCESS_TOKEN_EXPIRES_IN: string
 
   @IsString()
   @IsNotEmpty()
