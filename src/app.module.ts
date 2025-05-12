@@ -1,14 +1,16 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './api/auth/auth.module';
-import { UserModule } from './api/user/user.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import databaseConfig from 'src/database/config/database-config';
-import mongoConfig from 'src/database/config/mongooes-config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AllConfigType } from 'src/config/config.type';
-import { MongooseModule } from '@nestjs/mongoose';
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { AuthModule } from './api/auth/auth.module'
+import { UserModule } from './api/user/user.module'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import databaseConfig from 'src/database/config/database-config'
+import mongoConfig from 'src/database/config/mongooes-config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AllConfigType } from 'src/config/config.type'
+import { MongooseModule } from '@nestjs/mongoose'
+import { TypeOrmConfigService } from 'src/database/typeorm-config.service'
+import { DataSource, DataSourceOptions } from 'typeorm'
 
 @Module({
   imports: [
@@ -19,53 +21,31 @@ import { MongooseModule } from '@nestjs/mongoose';
       isGlobal: true,
       load: [databaseConfig, mongoConfig],
       cache: true,
-      expandVariables: true,
+      expandVariables: true
     }),
     TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<AllConfigType>) => {
-        return {
-          type: 'postgres',
-          host: configService.getOrThrow('database.host', {
-            infer: true,
-          }),
-          port: configService.getOrThrow('database.port', {
-            infer: true,
-          }),
-          username: configService.getOrThrow('database.username', {
-            infer: true,
-          }),
-          password: configService.getOrThrow('database.password', {
-            infer: true,
-          }),
-          database: configService.getOrThrow('database.name', {
-            infer: true,
-          }),
-          entities: [],
-          synchronize: true,
-        };
-      },
+      useClass: TypeOrmConfigService
     }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService<AllConfigType>) => {
         return {
           uri: `mongodb://${configService.getOrThrow('mongo.username', {
-            infer: true,
+            infer: true
           })}:${configService.getOrThrow('mongo.password', {
-            infer: true,
+            infer: true
           })}@${configService.getOrThrow('mongo.host', {
-            infer: true,
+            infer: true
           })}:${configService.getOrThrow('mongo.port', {
-            infer: true,
+            infer: true
           })}/${configService.getOrThrow('mongo.database', {
-            infer: true,
-          })}?authSource=admin`,
-        };
-      },
-    }),
+            infer: true
+          })}?authSource=admin`
+        }
+      }
+    })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}
