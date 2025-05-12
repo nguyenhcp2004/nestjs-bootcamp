@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Module } from '@nestjs/common'
@@ -20,6 +21,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import { Context } from 'graphql-ws'
 
 @Module({
   imports: [
@@ -58,7 +60,28 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       //auto schema tu dong taoj ra schema file co ten la schema.gql
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()]
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      subscriptions: {
+        'graphql-ws': true
+        //   'graphql-ws': {
+        //     onConnect: (context: Context<any>) => {
+        //       const { connectionParams, extra } = context
+        //       if (!connectionParams) {
+        //         throw new Error('Connection parameters are missing')
+        //       }
+        //       const authToken = connectionParams.authToken as string
+        //       // TODO: Handle logic with token (or biz logic)
+        //       if (!authToken) {
+        //         throw new Error('Token is missing')
+        //       }
+        //       ;(extra as { user: any }).user = { user: {} }
+        //     }
+        //   }
+        // },
+        // context: ({ extra }) => {
+        //   // you can now access your additional context value through the extra field
+        //   console.log(extra)
+      }
     }),
     UsergraphModule
   ],

@@ -46,3 +46,7 @@ input UpdateUsergraphInput {
   role: UserRole
   id: Int!
 }
+
+type Subscription {
+  userAdded(email: String!): Usergraph!
+}
