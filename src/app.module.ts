@@ -61,26 +61,26 @@ import { Context } from 'graphql-ws'
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      installSubscriptionHandlers: true,
       subscriptions: {
-        'graphql-ws': true
-        //   'graphql-ws': {
-        //     onConnect: (context: Context<any>) => {
-        //       const { connectionParams, extra } = context
-        //       if (!connectionParams) {
-        //         throw new Error('Connection parameters are missing')
-        //       }
-        //       const authToken = connectionParams.authToken as string
-        //       // TODO: Handle logic with token (or biz logic)
-        //       if (!authToken) {
-        //         throw new Error('Token is missing')
-        //       }
-        //       ;(extra as { user: any }).user = { user: {} }
-        //     }
-        //   }
-        // },
-        // context: ({ extra }) => {
-        //   // you can now access your additional context value through the extra field
-        //   console.log(extra)
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            const authToken = connectionParams?.authToken
+            console.log('authToken', authToken)
+            // TODO: Handle logic with token (or biz logic)
+            // if (!authToken) {
+            //   throw new Error('Token is missing')
+            // }
+            // extract user information from token
+            // const user = parseToken(authToken);
+            // return user info to add them to the context later
+            return { authToken }
+          }
+        }
+      },
+      context: ({ extra }) => {
+        // you can now access your additional context value through the extra field
+        // console.log(extra)
       }
     }),
     UsergraphModule
