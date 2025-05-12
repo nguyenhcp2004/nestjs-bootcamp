@@ -11,6 +11,8 @@ import { AllConfigType } from 'src/config/config.type'
 import { MongooseModule } from '@nestjs/mongoose'
 import { TypeOrmConfigService } from 'src/database/typeorm-config.service'
 import { DataSource, DataSourceOptions } from 'typeorm'
+import { APP_INTERCEPTOR } from '@nestjs/core'
+import { LoggingInterceptor } from 'src/interceptors/logging.interceptor'
 
 @Module({
   imports: [
@@ -46,6 +48,12 @@ import { DataSource, DataSourceOptions } from 'typeorm'
     })
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor
+    }
+  ]
 })
 export class AppModule {}
