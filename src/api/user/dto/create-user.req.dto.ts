@@ -1,23 +1,23 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator'
 
 export class CreateUserReqDto {
   @IsString()
   @IsNotEmpty()
-  username: string;
+  username: string
 
   @IsString()
   @IsNotEmpty()
-  email: string;
+  email: string
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  password: string
 
   @IsString()
   @IsNotEmpty()
-  bio?: string;
+  bio?: string
 
   @IsString()
   @IsNotEmpty()
-  image?: string;
+  image?: string
 }

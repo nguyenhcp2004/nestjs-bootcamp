@@ -1,33 +1,37 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsDate, IsString } from 'class-validator';
+import { Exclude, Expose } from 'class-transformer'
+import { IsDate, IsString } from 'class-validator'
 
 @Exclude()
 export class UserResDto {
   @IsString()
   @Expose()
-  id: string;
+  id: string
 
   @IsString()
   @Expose()
-  username: string;
+  username: string
 
   @IsString()
   @Expose()
-  email: string;
+  email: string
 
   @IsString()
   @Expose()
-  bio?: string;
+  password: string
 
   @IsString()
   @Expose()
-  image: string;
+  bio?: string
+
+  @IsString()
+  @Expose()
+  image: string
 
   @IsDate()
   @Expose()
-  createdAt: Date;
+  createdAt: Date
 
   @IsDate()
   @Expose()
-  updatedAt: Date;
+  updatedAt: Date
 }
