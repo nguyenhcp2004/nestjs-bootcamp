@@ -56,6 +56,7 @@ export class UserEntity extends AbstractEntity {
   @OneToMany(() => SessionEntity, (session) => session.user)
   sessions?: SessionEntity[]
 
+  @Column({ default: 'User' })
   role: string
 
   @BeforeInsert()

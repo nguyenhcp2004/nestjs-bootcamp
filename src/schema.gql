@@ -1,0 +1,42 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Usergraph {
+  id: String!
+  username: String!
+  email: String!
+  password: String!
+  bio: String
+  image: String
+  role: String!
+}
+
+type Query {
+  usergraph(id: String!): Usergraph!
+}
+
+type Mutation {
+  createUsergraph(createUsergraphInput: CreateUsergraphDto!): Usergraph!
+  updateUsergraph(updateUsergraphInput: UpdateUsergraphInput!): Usergraph!
+  removeUsergraph(id: Int!): Usergraph!
+}
+
+input CreateUsergraphDto {
+  username: String!
+  email: String!
+  password: String!
+  bio: String
+  image: String
+  role: String!
+}
+
+input UpdateUsergraphInput {
+  username: String
+  email: String
+  password: String
+  bio: String
+  image: String
+  role: String
+  id: Int!
+}

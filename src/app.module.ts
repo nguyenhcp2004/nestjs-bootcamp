@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -10,10 +12,14 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AllConfigType } from 'src/config/config.type'
 import { MongooseModule } from '@nestjs/mongoose'
 import { TypeOrmConfigService } from 'src/database/typeorm-config.service'
-import { DataSource, DataSourceOptions } from 'typeorm'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor'
+import { UsergraphModule } from './graphql/usergraph/usergraph.module'
 import authConfig from '@/api/auth/config/auth-config'
+import { GraphQLModule } from '@nestjs/graphql'
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
+import { join } from 'path'
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 
 @Module({
   imports: [
@@ -46,15 +52,23 @@ import authConfig from '@/api/auth/config/auth-config'
           })}?authSource=admin`
         }
       }
-    })
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      //auto schema tu dong taoj ra schema file co ten la schema.gql
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()]
+    }),
+    UsergraphModule
   ],
   controllers: [AppController],
   providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor
-    }
+    AppService
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: LoggingInterceptor
+    // }
   ]
 })
 export class AppModule {}
