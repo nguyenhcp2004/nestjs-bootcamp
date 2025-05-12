@@ -6,6 +6,8 @@ import { Usergraph } from './entities/usergraph.entity'
 import { CreateUsergraphDto } from './dto/create-usergraph.input'
 import { UpdateUsergraphInput } from './dto/update-usergraph.input'
 import { PubSub } from 'graphql-subscriptions'
+import { UseGuards } from '@nestjs/common'
+import { GraphQLJwtAuthGuard } from 'src/guards/graphql.guard'
 @Resolver(() => Usergraph)
 export class UsergraphResolver {
   private pubSub: PubSub
@@ -14,6 +16,7 @@ export class UsergraphResolver {
   }
 
   // listen to userAdded event
+  @UseGuards(GraphQLJwtAuthGuard)
   @Subscription(() => Usergraph, {
     filter: (payload, variables) => {
       return payload.userAdded.email === variables.email
@@ -26,7 +29,7 @@ export class UsergraphResolver {
   @Mutation(() => Usergraph)
   async createUsergraph(@Args('createUsergraphInput') createUsergraphInput: CreateUsergraphDto) {
     const newUser = await this.usergraphService.create(createUsergraphInput)
-    this.pubSub.publish('userAdded', {
+    await this.pubSub.publish('userAdded', {
       userAdded: newUser
     })
     return newUser
