@@ -1,5 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
+import { UserRole } from 'src/graphql/usergraph/enum/user-role.enum'
 
 @InputType()
 export class CreateUsergraphDto {
@@ -24,6 +25,6 @@ export class CreateUsergraphDto {
   image?: string
 
   @IsNotEmpty()
-  @Field(() => String)
-  role: string
+  @Field(() => UserRole)
+  role: UserRole
 }

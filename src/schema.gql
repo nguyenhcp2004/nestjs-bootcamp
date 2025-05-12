@@ -9,7 +9,13 @@ type Usergraph {
   password: String!
   bio: String
   image: String
-  role: String!
+  role: UserRole!
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  GUEST
 }
 
 type Query {
@@ -28,7 +34,7 @@ input CreateUsergraphDto {
   password: String!
   bio: String
   image: String
-  role: String!
+  role: UserRole!
 }
 
 input UpdateUsergraphInput {
@@ -37,6 +43,6 @@ input UpdateUsergraphInput {
   password: String
   bio: String
   image: String
-  role: String
+  role: UserRole
   id: Int!
 }

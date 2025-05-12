@@ -1,5 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { UserRole } from 'src/graphql/usergraph/enum/user-role.enum'
 
 @ObjectType()
 @Schema()
@@ -29,8 +30,8 @@ export class Usergraph {
   image?: string
 
   @Prop()
-  @Field()
-  role: string
+  @Field(() => UserRole)
+  role: UserRole
 }
 
 export const UserSchema = SchemaFactory.createForClass(Usergraph)
