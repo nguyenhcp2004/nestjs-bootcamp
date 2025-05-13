@@ -3,12 +3,15 @@
 import { Resolver, Query, Mutation, Args, Int, Subscription } from '@nestjs/graphql'
 import { UsergraphService } from './usergraph.service'
 import { Usergraph } from './entities/usergraph.entity'
-import { CreateUsergraphDto } from './dto/create-usergraph.input'
 import { UpdateUsergraphInput } from './dto/update-usergraph.input'
 import { PubSub } from 'graphql-subscriptions'
-import { UseGuards } from '@nestjs/common'
+import { UseGuards, UsePipes } from '@nestjs/common'
 import { GraphQLJwtAuthGuard } from 'src/guards/graphql.guard'
+import { CreateUsergraphDto } from 'src/graphql/usergraph/dto/create-usergraph.input'
+import { ZodValidationPipe } from 'nestjs-zod'
+
 @Resolver(() => Usergraph)
+@UsePipes(ZodValidationPipe)
 export class UsergraphResolver {
   private pubSub: PubSub
   constructor(private readonly usergraphService: UsergraphService) {

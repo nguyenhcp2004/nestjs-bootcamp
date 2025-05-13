@@ -8,16 +8,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   // Enable validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-      exceptionFactory: (validationErrors: ValidationError[] = []) => {
-        return new UnprocessableEntityException(validationErrors)
-      }
-    })
-  )
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     transform: true,
+  //     whitelist: true,
+  //     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  //     exceptionFactory: (validationErrors: ValidationError[] = []) => {
+  //       return new UnprocessableEntityException(validationErrors)
+  //     }
+  //   })
+  // )
 
   await app.listen(process.env.PORT ?? 3000)
 }

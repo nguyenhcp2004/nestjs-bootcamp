@@ -13,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AllConfigType } from 'src/config/config.type'
 import { MongooseModule } from '@nestjs/mongoose'
 import { TypeOrmConfigService } from 'src/database/typeorm-config.service'
-import { APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor'
 import { UsergraphModule } from './graphql/usergraph/usergraph.module'
 import authConfig from '@/api/auth/config/auth-config'
@@ -22,6 +22,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { Context } from 'graphql-ws'
+import { ZodValidationPipe } from '@anatine/zod-nestjs'
 
 @Module({
   imports: [
@@ -88,6 +89,10 @@ import { Context } from 'graphql-ws'
   controllers: [AppController],
   providers: [
     AppService
+    // {
+    //   provide: APP_PIPE,
+    //   useClass: ZodValidationPipe
+    // }
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: LoggingInterceptor
