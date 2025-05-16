@@ -6,7 +6,7 @@ import { Usergraph } from './entities/usergraph.entity'
 import { UpdateUsergraphInput } from './dto/update-usergraph.input'
 import { PubSub } from 'graphql-subscriptions'
 import { UseGuards, UsePipes } from '@nestjs/common'
-import { GraphQLJwtAuthGuard } from 'src/guards/graphql.guard'
+import { GraphQLJwtAuthGuard } from 'src/jwt/guards/graphql.guard'
 import { CreateUsergraphDto } from 'src/graphql/usergraph/dto/create-usergraph.input'
 import { ZodValidationPipe } from 'nestjs-zod'
 
@@ -52,7 +52,7 @@ export class UsergraphResolver {
   updateUsergraph(@Args('updateUsergraphInput') updateUsergraphInput: UpdateUsergraphInput) {
     return this.usergraphService.update(updateUsergraphInput.id, updateUsergraphInput)
   }
-
+  // this is a mutation to remove a usergraph
   @Mutation(() => Usergraph)
   removeUsergraph(@Args('id', { type: () => Int }) id: number) {
     return this.usergraphService.remove(id)

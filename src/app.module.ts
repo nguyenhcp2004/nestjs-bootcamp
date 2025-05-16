@@ -21,9 +21,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
-import { Context } from 'graphql-ws'
-import { ZodValidationPipe } from '@anatine/zod-nestjs'
-
+import { BullModule } from 'src/background/bull.module'
 @Module({
   imports: [
     AuthModule,
@@ -62,29 +60,14 @@ import { ZodValidationPipe } from '@anatine/zod-nestjs'
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      installSubscriptionHandlers: true,
       subscriptions: {
-        'subscriptions-transport-ws': {
-          onConnect: (connectionParams) => {
-            const authToken = connectionParams?.authToken
-            console.log('authToken', authToken)
-            // TODO: Handle logic with token (or biz logic)
-            // if (!authToken) {
-            //   throw new Error('Token is missing')
-            // }
-            // extract user information from token
-            // const user = parseToken(authToken);
-            // return user info to add them to the context later
-            return { authToken }
-          }
-        }
-      },
-      context: ({ extra }) => {
-        // you can now access your additional context value through the extra field
-        // console.log(extra)
+        'graphql-ws': true
       }
     }),
-    UsergraphModule
+    UsergraphModule,
+    BullModule.forRoot({
+      isGlobal: true
+    })
   ],
   controllers: [AppController],
   providers: [
