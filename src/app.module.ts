@@ -24,7 +24,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { BullModule } from 'src/background/bull.module'
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager'
 import { createKeyv, Keyv } from '@keyv/redis'
-import { GqlCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
+import { EventModule } from 'src/ws'
 
 @Module({
   imports: [
@@ -68,6 +68,7 @@ import { GqlCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
         'graphql-ws': true
       }
     }),
+    EventModule,
     UsergraphModule,
     BullModule.forRoot({
       isGlobal: true

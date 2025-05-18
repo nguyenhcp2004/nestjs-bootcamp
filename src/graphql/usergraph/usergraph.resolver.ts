@@ -9,7 +9,7 @@ import { UseGuards, UseInterceptors, UsePipes } from '@nestjs/common'
 import { GraphQLJwtAuthGuard } from 'src/jwt/guards/graphql.guard'
 import { CreateUsergraphDto } from 'src/graphql/usergraph/dto/create-usergraph.input'
 import { ZodValidationPipe } from 'nestjs-zod'
-import { GqlCacheInterceptor, GqlIdCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
+import { GqlIdCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
 
 @Resolver(() => Usergraph)
 @UsePipes(ZodValidationPipe)
