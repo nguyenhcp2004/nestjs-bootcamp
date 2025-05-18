@@ -5,13 +5,15 @@ import { UsergraphService } from './usergraph.service'
 import { Usergraph } from './entities/usergraph.entity'
 import { UpdateUsergraphInput } from './dto/update-usergraph.input'
 import { PubSub } from 'graphql-subscriptions'
-import { UseGuards, UsePipes } from '@nestjs/common'
+import { UseGuards, UseInterceptors, UsePipes } from '@nestjs/common'
 import { GraphQLJwtAuthGuard } from 'src/jwt/guards/graphql.guard'
 import { CreateUsergraphDto } from 'src/graphql/usergraph/dto/create-usergraph.input'
 import { ZodValidationPipe } from 'nestjs-zod'
+import { GqlCacheInterceptor, GqlIdCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
 
 @Resolver(() => Usergraph)
 @UsePipes(ZodValidationPipe)
+// @UseInterceptors(CacheInterceptor)
 export class UsergraphResolver {
   private pubSub: PubSub
   constructor(private readonly usergraphService: UsergraphService) {
@@ -20,6 +22,7 @@ export class UsergraphResolver {
 
   // listen to userAdded event
   @UseGuards(GraphQLJwtAuthGuard)
+  // @UseInterceptors(GqlCacheInterceptor)
   @Subscription(() => Usergraph, {
     filter: (payload, variables) => {
       return payload.userAdded.email === variables.email
@@ -38,7 +41,8 @@ export class UsergraphResolver {
     return newUser
   }
 
-  @Query(() => [Usergraph], { name: 'usergraph' })
+  @UseInterceptors(GqlIdCacheInterceptor)
+  @Query(() => [Usergraph], { name: 'usergraphall' })
   findAll() {
     return this.usergraphService.findAll()
   }

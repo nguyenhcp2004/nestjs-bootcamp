@@ -22,6 +22,10 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { BullModule } from 'src/background/bull.module'
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager'
+import { createKeyv, Keyv } from '@keyv/redis'
+import { GqlCacheInterceptor } from 'src/interceptors/graph-cache.interceptor'
+
 @Module({
   imports: [
     AuthModule,
@@ -67,6 +71,14 @@ import { BullModule } from 'src/background/bull.module'
     UsergraphModule,
     BullModule.forRoot({
       isGlobal: true
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: () => {
+        return {
+          stores: [createKeyv('redis://default:redis@localhost:6379')]
+        }
+      }
     })
   ],
   controllers: [AppController],

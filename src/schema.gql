@@ -19,6 +19,7 @@ enum UserRole {
 }
 
 type Query {
+  usergraphall: [Usergraph!]!
   usergraph(id: String!): Usergraph!
 }
 

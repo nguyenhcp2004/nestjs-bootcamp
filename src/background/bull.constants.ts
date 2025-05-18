@@ -7,6 +7,10 @@ export const queueOptions = {
   FAILED_JOB_COUNT: 5000 // keep up to 1000 jobs
 }
 
+export const JobName = {
+  EMAIL_VERIFICATION: 'email-verification'
+}
+
 export const bullData: Record<BullQueueName, BullQueueData> = {
   [BullQueueName.Email]: {
     name: 'EMAIL_QUEUE',
