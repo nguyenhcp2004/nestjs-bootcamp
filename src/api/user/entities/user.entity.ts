@@ -59,11 +59,11 @@ export class UserEntity extends AbstractEntity {
   @Column({ default: 'User' })
   role: string
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    if (this.password) {
-      this.password = await hashPassword(this.password)
-    }
-  }
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  // async hashPassword() {
+  //   if (this.password) {
+  //     this.password = await hashPassword(this.password)
+  //   }
+  // }
 }

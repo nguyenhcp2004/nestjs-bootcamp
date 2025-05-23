@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserReqDto } from './dto/create-user.req.dto'
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler'
 
 @Controller('user')
 export class UserController {
@@ -12,6 +13,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(ThrottlerGuard)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id)
   }

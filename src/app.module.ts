@@ -25,6 +25,9 @@ import { BullModule } from 'src/background/bull.module'
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager'
 import { createKeyv, Keyv } from '@keyv/redis'
 import { EventModule } from 'src/ws'
+import { HealthzModule } from './api/healthz/healthz.module'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 
 @Module({
   imports: [
@@ -80,6 +83,15 @@ import { EventModule } from 'src/ws'
           stores: [createKeyv('redis://default:redis@localhost:6379')]
         }
       }
+    }),
+    HealthzModule,
+    ThrottlerModule.forRoot({
+      throttlers: [{ limit: 1, ttl: 60000 }],
+      storage: new ThrottlerStorageRedisService({
+        host: 'localhost',
+        port: 6379,
+        password: 'redis'
+      })
     })
   ],
   controllers: [AppController],

@@ -5,15 +5,13 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
-  WebSocketServer,
-  ConnectedSocket,
-  BaseWsExceptionFilter
+  WebSocketServer
 } from '@nestjs/websockets'
 import { Socket, Server } from 'socket.io'
 import { WsJwtAuthGuard } from 'src/jwt/guards/ws.guard'
 import { WsExceptionFilter } from 'src/ws/ ws-exception.filter'
 
-@WebSocketGateway(5001, { transports: ['websocket'] })
+@WebSocketGateway(5001, { transports: ['websocket'], namespace: 'event' })
 @UseFilters(WsExceptionFilter)
 @UseGuards(WsJwtAuthGuard)
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
